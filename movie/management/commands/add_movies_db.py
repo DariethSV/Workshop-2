@@ -19,12 +19,7 @@ class Command(BaseCommand):
                 Movie.objects.create(
                     title = movie['title'],
                     image = 'movie/images/dafault.jpg',
+                    description = movie['plot'],
                     genre= movie['genre'],
                     year = movie['year'],
-                )
-        
-            temp_movies = Movie.objects.filter(description__isnull=True) | Movie.objects.filter(description='')
-            for movie in temp_movies:
-                movie.description=movies[i]['plot']
-                
-                
+                )               

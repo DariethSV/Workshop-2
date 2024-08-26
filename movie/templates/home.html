@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <div class="container">
-
     <form action="">
         <div class="mb-3">
             <label for="searchMovie" class="form-label">
@@ -37,4 +37,12 @@
     <br/>
     <br/>
 </div>
+<h2>Join our mailing list:</h2>
+<form action="{% url 'signup' %}">
+    <div class="mb-3">
+        <label for="email" class="form-label">Enter your email: </label>
+        <input type="email" name="email" class="form-control"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+</form>
 {% endblock content %}
