@@ -3,21 +3,24 @@
 {% block content %}
 
 <div class="container">
-    <form action="">
-        <div class="mb-3">
-            <label for="searchMovie" class="form-label">
+    <form class="w-100" action="">
+        <div class="mb-3 d-flex w-50">
+            <label for="searchMovie" class="form-label me-2">
                 Search for Movie:
             </label>
-            <input type="text" class="form-label" name="searchMovie">
+            <input type="text" class="form-label w-50" name="searchMovie">
+            <button type="submit" class="btn btn-primary btn-sm ms-2" style="height: 30px;">Search</button>
         </div>
-        <button type="submit" class="btn btn-primary">Search</button>
+        
     </form>
+    {% if searchTerm %}
     <p>Searching for {{searchTerm}}</p>
+    {% endif %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for movie in movies %}
         <div v-for="movie in movies" class="col">
             <div class="card">
-                <img class="card-img-top" src="{{movie.image.url}}">
+                <img class="card-img-top img-fluid" src="{{movie.image.url}}">
                 <div class="card-body">
                     <h5 class="card-title fw-bold">{{movie.title}}</h5>
                     <p class="card-text">{{movie.description}}</p>

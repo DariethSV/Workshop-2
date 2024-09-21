@@ -5,11 +5,15 @@ import matplotlib.pyplot as plt
 import matplotlib
 import io
 import urllib, base64
+from dotenv import load_dotenv, find_dotenv
+import json
+import os
+from openai import OpenAI
 
+import numpy as np
 
 def home(request):
-    #return HttpResponse('<h1>Welcome to home page</h1>')
-    #return render(request, 'home.html', {'name':'Darieth Sánchez'})
+
     searchTerm = request.GET.get('searchMovie')
     if searchTerm:
         movies = Movie.objects.filter(title__icontains=searchTerm)
@@ -62,3 +66,48 @@ def statitstics_view(request):
 def signup(request):
     email = request.GET.get('email')
     return render(request, 'signup.html', {'email':email})
+
+def recommendation(request):
+    recommended_movie = None
+
+    load_dotenv(r'C:\Users\Darieth\Desktop\Proyecto_Integrador_1\Workshop-3\Workshop-3\api_keys.env')
+
+    api_key = os.environ.get('openai_api_key')
+    if api_key is None:
+        raise ValueError("API key not found. Check your api_keys.env file.")
+    client = OpenAI(
+        api_key=os.environ.get('openai_api_key'),
+    )
+
+    movies = Movie.objects.all()
+
+    def get_embedding(text, model="text-embedding-3-small"):
+        text = text.replace("\n", " ")
+        return client.embeddings.create(input = [text], model=model).data[0].embedding
+
+    def cosine_similarity(a, b):
+        return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+    req = request.GET.get('recommendation_prompt')
+    
+    if req:
+        emb = get_embedding(req)
+        sim = []
+        for movie in movies:
+            movie_emb = list(np.frombuffer(movie.emb))
+            sim.append(cosine_similarity(emb,movie_emb))
+
+        sim = np.array(sim)
+        idx = np.argmax(sim)
+        idx = int(idx)
+        movie_list =  list(movies)
+        recommended_movie = movie_list[idx]
+        return render(request, 'recommendation.html',{'recommended_movie':recommended_movie})
+        
+    else:
+        return render(request, 'recommendation.html',{'recommended_movie':recommended_movie})
+    
+
+    
+    
+

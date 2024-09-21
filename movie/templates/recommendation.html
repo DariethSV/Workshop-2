@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <form  class="w-100" action="{% url 'recommendation' %}">
+        <div class="mb-3 d-flex">
+            <label for="searchMovie" class="form-label">
+                Recommend for Movie:
+            </label>
+            <input type="text" class="form-label ms-2 w-50" name="recommendation_prompt">
+            <button type="submit" class="btn btn-primary ms-2 btn-sm" style="height: 30px;">Recommend</button>
+        </div>
+        
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% if recommended_movie %}
+        <div v-for="movie in movies" class="col">
+            <div class="card">
+                <img class="card-img-top img-fluid" src="{{recommended_movie.image.url}}">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{recommended_movie.title}}</h5>
+                    <p class="card-text">{{recommended_movie.description}}</p>
+                    <p class="card-text">{{recommended_movie.genre}}</p>
+                    <p class="card-text">{{recommended_movie.year}}</p>
+
+                    {% if recommended_movie.url %}
+                        <a href="{{recommended_movie.url}}" class="btn btn-primary">
+                            Movie Link
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <br/>
+    <br/>
+</div>
+{% endblock content %}
